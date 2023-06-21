@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 Authors: Reza Baharani - Transformative Computer Systems Architecture Research (TeCSAR) at UNC Charlotte
 */
 
-%module riscv_disas
+%module(package="_riscv_disas", moduleimport="import $module") riscv_disas
 %{
 	/* Includes the header in the wrapper code */
 	#include "riscv-disas.h"

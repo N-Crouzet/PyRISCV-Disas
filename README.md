@@ -14,6 +14,12 @@ git clone https://github.com/mbaharan/PyRISCV-Disas.git
 cd PyRISCV-Disas
 sudo python3 setup.py install
 ```
+
+To generate the python bindings (from the PyRISCV-Disas directory)
+```bash
+swig4.0 -python -py3 -relativeimport -outdir ./src/pyriscv_disas/ ./c_core/riscv-disas.i
+```
+
 ## Demo
 Change the path to the `demo` directory and run the `test.py`:
 ```bash
