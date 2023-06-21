@@ -150,6 +150,13 @@ static const rvc_constraint rvcc_fsrm[] = { rvc_csr_eq_0x002, rvc_end };
 static const rvc_constraint rvcc_fsflags[] = { rvc_csr_eq_0x001, rvc_end };
 static const rvc_constraint rvcc_fsrmi[] = { rvc_csr_eq_0x002, rvc_end };
 static const rvc_constraint rvcc_fsflagsi[] = { rvc_csr_eq_0x001, rvc_end };
+static const rvc_constraint rvcc_tmc[] = { rvc_imm_eq_zero, rvc_rs1_eq_x0, rvc_end };
+static const rvc_constraint rvcc_pred[] = { rvc_imm_eq_zero, rvc_rs1_eq_ra, rvc_end };
+static const rvc_constraint rvcc_wspawn[] = { rvc_imm_eq_zero, rvc_end };
+static const rvc_constraint rvcc_split[] = { rvc_imm_eq_zero, rvc_rs1_eq_x0, rvc_end };
+static const rvc_constraint rvcc_join[] = { rvc_imm_eq_zero, rvc_rs1_eq_x0, rvc_rs2_eq_x0, rvc_end };
+static const rvc_constraint rvcc_barrier[] = { rvc_imm_eq_zero, rvc_end };
+static const rvc_constraint rvcc_prefetch[] = { rvc_imm_eq_zero, rvc_rs1_eq_x0, rvc_end };
 
 /* pseudo-instruction metadata */
 
@@ -311,6 +318,37 @@ static const rv_comp_data rvcp_fsgnjn_q[] = {
 static const rv_comp_data rvcp_fsgnjx_q[] = {
     { rv_op_fabs_q, rvcc_fabs_q },
     { rv_op_illegal, NULL }
+};
+
+static const rv_comp_data rvcp_tmc[] = {
+    { rv_op_vx_pred, rvcc_pred },
+    { rv_op_vx_tmc, rvcc_tmc },
+    { rv_op_illegal, NULL }
+};
+
+static const rv_comp_data rvcp_wspawn[] = {
+        { rv_op_vx_wspawn, rvcc_wspawn },
+        { rv_op_illegal, NULL }
+};
+
+static const rv_comp_data rvcp_split[] = {
+        { rv_op_vx_split, rvcc_split },
+        { rv_op_illegal, NULL }
+};
+
+static const rv_comp_data rvcp_join[] = {
+        { rv_op_vx_join, rvcc_join },
+        { rv_op_illegal, NULL }
+};
+
+static const rv_comp_data rvcp_barrier[] = {
+        { rv_op_vx_barrier, rvcc_barrier },
+        { rv_op_illegal, NULL }
+};
+
+static const rv_comp_data rvcp_prefetch[] = {
+        { rv_op_vx_prefetch, rvcc_prefetch },
+        { rv_op_illegal, NULL }
 };
 
 /* instruction metadata */
@@ -635,6 +673,13 @@ const rv_opcode_data opcode_data[] = {
     { "fsflags", rv_codec_i_csr, rv_fmt_rd_rs1, NULL, 0, 0, 0 },
     { "fsrmi", rv_codec_i_csr, rv_fmt_rd_zimm, NULL, 0, 0, 0 },
     { "fsflagsi", rv_codec_i_csr, rv_fmt_rd_zimm, NULL, 0, 0, 0 },
+    { "vx_tmc", rv_codec_s, rv_fmt_rs1, rvcp_tmc, 0, 0, 0 },
+    { "vx_pred", rv_codec_s, rv_fmt_rs1, NULL, 0, 0, 0 },
+    { "vx_wspawn", rv_codec_s, rv_fmt_rs1_rs2, rvcp_wspawn, 0, 0, 0 },
+    { "vx_split", rv_codec_s, rv_fmt_rs1, rvcp_split, 0, 0, 0 },
+    { "vx_join", rv_codec_s, rv_fmt_none, rvcp_join, 0, 0, 0 },
+    { "vx_barrier", rv_codec_s, rv_fmt_rs1_rs2, rvcp_barrier, 0, 0, 0 },
+    { "vx_prefetch", rv_codec_s, rv_fmt_rs1, rvcp_prefetch, 0, 0, 0 },
 };
 
 /* CSR names */
@@ -1409,7 +1454,17 @@ static void decode_inst_opcode(rv_decode *dec, rv_isa isa)
             break;
         case 25:
             switch (((inst >> 12) & 0b111)) {
-            case 0: op = rv_op_jalr; break;
+                case 0: op = rv_op_jalr; break;
+            }
+            break;
+        case 26:
+            switch (((inst >> 12) & 0b111)) {
+                case 0: op = rv_op_vx_tmc; break;
+                case 1: op = rv_op_vx_wspawn; break;
+                case 2: op = rv_op_vx_split; break;
+                case 3: op = rv_op_vx_join; break;
+                case 4: op = rv_op_vx_barrier; break;
+                case 5: op = rv_op_vx_prefetch; break;
             }
             break;
         case 27: op = rv_op_jal; break;

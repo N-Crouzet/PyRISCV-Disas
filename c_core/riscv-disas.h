@@ -490,6 +490,13 @@ typedef enum {
     rv_op_fsflags = 316,
     rv_op_fsrmi = 317,
     rv_op_fsflagsi = 318,
+    rv_op_vx_tmc = 319,
+    rv_op_vx_pred = 320,
+    rv_op_vx_wspawn = 321,
+    rv_op_vx_split = 322,
+    rv_op_vx_join = 323,
+    rv_op_vx_barrier = 324,
+    rv_op_vx_prefetch = 325
 } rv_op;
 
 /* structures */
