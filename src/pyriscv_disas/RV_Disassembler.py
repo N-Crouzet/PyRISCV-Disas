@@ -50,7 +50,7 @@ class Inst(rv_decode):
             4. S(ynch)    -> Fence instructions
     '''
     instruction_type = {
-        -1: "Illigal",
+        -1: "Illegal",
         0: "R",
         1: "M",
         2: "C",
